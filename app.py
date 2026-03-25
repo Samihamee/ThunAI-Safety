@@ -10,18 +10,20 @@ import pandas as pd
 import pickle
 
 # --- APP CONFIG ---
-st.set_page_config(page_title="ThunAI - Safety Portal", layout="wide", page_icon="🛡️")
+# Updated Title in the Browser Tab
+st.set_page_config(page_title="Voice Controlled Women Safety App", layout="wide", page_icon="🛡️")
 
 # --- CUSTOM CSS ---
 st.markdown("""
     <style>
     .stButton>button { width: 100%; border-radius: 8px; height: 3.5em; font-weight: bold; }
     .stHeader { color: #ff4b4b; }
+    h1 { color: #ff4b4b !important; text-align: center; }
     </style>
     """, unsafe_allow_html=True)
 
 # --- GEOLOCATION SETUP ---
-geolocator = Nominatim(user_agent="ThunAI_Safety_Final_v4")
+geolocator = Nominatim(user_agent="ThunAI_Voice_Safety_v5")
 
 # --- DIRECT SMS LOGIC ---
 def trigger_sos_protocol(emergency_contact, lat, lng):
@@ -29,7 +31,6 @@ def trigger_sos_protocol(emergency_contact, lat, lng):
     message_body = f"🚨 SOS! EMERGENCY! I need help. My location: {maps_link}"
     encoded_msg = urllib.parse.quote(message_body)
     
-    # Standard SMS protocol
     sms_url = f"sms:+91{emergency_contact}?body={encoded_msg}"
     
     st.error("🚨 EMERGENCY PROTOCOL ACTIVATED")
@@ -60,12 +61,12 @@ def get_address(lat, lng):
         return f"Coordinates: {lat}, {lng}"
 
 # --- MAIN APP UI ---
-st.title("🛡️ ThunAI: Women's Safety Portal")
+# Updated Main Heading
+st.title("🛡️ Voice Controlled Women Safety App")
 
 tab1, tab2 = st.tabs(["🏠 Safety Dashboard", "💬 Community Forum"])
 
 with tab1:
-    # Captures Real-Time GPS from Browser
     loc = get_geolocation()
     
     if loc:
@@ -79,7 +80,6 @@ with tab1:
         
         with col1:
             st.subheader("Emergency Actions")
-            # Using Session State to remember the contact for Voice SOS
             contact_input = st.text_input("Emergency Contact (10 digits)", placeholder="8639227063", max_chars=10)
             st.session_state['sos_contact'] = contact_input.strip()
             
@@ -91,11 +91,9 @@ with tab1:
 
             st.markdown("---")
             
-            # --- VOICE COMMAND MODULE ---
             st.subheader("🎙️ Voice SOS Activation")
             st.info("Say **'HELP'** or **'SOS'** to trigger the alert hands-free.")
             
-            # Speech-to-Text Component
             text = speech_to_text(language='en', start_prompt="⏺️ Start Listening", stop_prompt="⏹️ Stop", key='voice_sos')
 
             if text:
@@ -105,7 +103,7 @@ with tab1:
                     if len(st.session_state['sos_contact']) == 10:
                         trigger_sos_protocol(st.session_state['sos_contact'], lat, lng)
                     else:
-                        st.error("Voice recognized, but no valid contact number is set above.")
+                        st.error("Voice recognized, but no valid contact number is set.")
 
         with col2:
             st.subheader("Live Safety Map")
