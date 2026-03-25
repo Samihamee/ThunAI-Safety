@@ -1,9 +1,6 @@
 streamlit
-googlemaps
+geopy
 folium
 streamlit-folium
 streamlit-js-eval
-firebase-admin
-twilio
-datetime
-python-dotenv
+pandas
